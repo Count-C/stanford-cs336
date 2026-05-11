@@ -129,6 +129,7 @@ def train_bpe(
     
     start_time = time.time()
     
+    special_tokens.sort(key=len, reverse=True)
     chunk_boundaries = find_chunk_boundaries(input_path, b'\n')
 
     pretoken_count = defaultdict(int)

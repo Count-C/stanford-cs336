@@ -13,7 +13,7 @@ class Tokenizer:
     ):
         self.decode_vocab = vocab
         self.merges = merges
-        self.spcial_tokens = special_tokens
+        self.special_tokens = sorted(special_tokens, key=len, reverse=True) if special_tokens else None
 
         self.encode_vocab = {v: k for k, v in vocab.items()}
 
@@ -22,10 +22,12 @@ class Tokenizer:
 
         self.special_regex = None
         self.special_tokens_set = set()
-        if self.spcial_tokens:
-            special_pat = "|".join(re.escape(token) for token in self.spcial_tokens)
+        self.special_utf8_tokens_set = set()
+        if self.special_tokens:
+            special_pat = "|".join(re.escape(token) for token in self.special_tokens)
             self.special_regex = re.compile(f"({special_pat})")
-            self.special_tokens_set = set(self.spcial_tokens)
+            self.special_tokens_set = set(self.special_tokens)
+            self.special_utf8_tokens_set = {token.encode("utf-8") for token in self.special_tokens}
 
 
     @classmethod
@@ -49,7 +51,7 @@ class Tokenizer:
         tokens = []
         pretokens = self.__pretokenize(text)
         for pretoken in tqdm(pretokens, desc="Tokenizing"):
-            if pretoken in self.special_tokens_set:
+            if pretoken in self.special_utf8_tokens_set:
                 tokens.append(self.encode_vocab[pretoken])
             else:
                 merged_pretoken = self.__apply_merge(pretoken)
@@ -65,14 +67,15 @@ class Tokenizer:
         
     def decode(self, ids: list[int]) -> str:
         text_bytes_list = [self.decode_vocab[id] for id in ids]
-        return b"".join(text_bytes_list).decode("utf-8")
+        return b"".join(text_bytes_list).decode("utf-8", errors='replace')
 
 
     def __pretokenize(self, text: str) ->list[bytes]:
 
-        if not self.spcial_tokens:
+        if not self.special_tokens:
             words = self.pretokenize_regex.findall(text)
             pretoken = [word.encode("utf-8") for word in words]
+            return pretoken
         
         pretoken = []
         parts = self.special_regex.split(text)
