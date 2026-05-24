@@ -1,0 +1,34 @@
+model:
+  vocab_size: 10000
+  context_length: 256
+  num_layers: 4
+  d_model: 512
+  num_heads: 16
+  d_ff: 1344
+
+train:
+  seed: 42
+  batch_size: 128
+  max_iters: 5000
+  lr: 3e-4
+  betas: [0.9, 0.999]
+  min_lr: 1e-5
+  warmup_iters: 1000
+  weight_decay: 0.1
+  grad_clip: 1.0
+  eval_num_batches: 20
+
+data:
+  train_path: "/root/stanford-cs336/TinyStoriesV2_train.bin"
+  val_path: "/root/stanford-cs336/TinyStoriesV2_valid.bin"
+  
+
+logging:
+  log_interval: 50
+  tb_interval: 10
+  log_dir: "/root/stanford-cs336/assignment1-basics/cs336_basics/log"
+
+checkpoint:
+  save_interval: 100
+  save_dir: "/root/stanford-cs336/assignment1-basics/cs336_basics/checkpoint"
+  # load_file: ""

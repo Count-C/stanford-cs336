@@ -63,7 +63,7 @@ def gradient_clipping(params: Iterable[torch.nn.Parameter], max_l2_norm: float, 
     for g in grads:
         norm.add_(g.pow(2).sum())
     norm.sqrt_()
-    clip_coef = min(1, max_l2_norm / (norm + 1e-6))
+    clip_coef = min(1, max_l2_norm / (norm + esp))
     for p in params:
         if p.grad is not None:
             p.grad.mul_(clip_coef)
