@@ -32,3 +32,13 @@ checkpoint:
   save_interval: 100
   save_dir: "/root/stanford-cs336/assignment1-basics/cs336_basics/checkpoint"
   # load_file: ""
+
+generate:
+  temperature: 0.7
+  top_k: 0.9
+  vocab_file: "/Users/count_c/code/stanford-cs336/assignment1-basics/cs336_basics/bpe_vocab/TinyStoriesV2/vocab.pkl"
+  merge_file: "/Users/count_c/code/stanford-cs336/assignment1-basics/cs336_basics/bpe_vocab/TinyStoriesV2/merge.pkl"
+  special_tokens: ["<|endoftext|>"]
+  end_token: "<|endoftext|>"
+  max_length: 256
+  checkpoint: "/Users/count_c/code/stanford-cs336/assignment1-basics/cs336_basics/checkpoint/checkpoint_4900.pt"
